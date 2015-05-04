@@ -1,2 +1,5 @@
 <h1>Notice</h1>
 You received this notice because you are configured to be noticed when issue status is updated to <%= @issue.status.name %>.
+
+<hr />
+<h1><%= link_to(h("#{@issue.tracker.name} ##{@issue.id}: #{@issue.subject}"), @issue_url) %></h1>

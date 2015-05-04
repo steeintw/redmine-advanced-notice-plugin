@@ -37,8 +37,8 @@ Redmine::Plugin.register :advanced_notice do
   author 'Stee Shen'
   description 'This plugin will add a setting page per project, one can use this setting to deliver addition notices to users assigned to a custom field, when issue status is changed to delicated status.'
   version '0.0.1'
-  url ''
-  author_url 'http://example.com/about'
+  url 'https://github.com/steeintw/redmine-advanced-notice-plugin'
+  author_url 'https://github.com/steeintw'
 
   project_module :advanced_notice do
     permission :view_advanced_notice_setting, :advanced_notice_settings => :index    

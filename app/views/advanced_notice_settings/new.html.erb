@@ -1,0 +1,17 @@
+<h2>Edit<h2>
+<%= form_for :setting, url: {action: "create"} do |f| %>
+	<%= f.hidden_field(:project_id, :value => @project) %>
+	<div>
+		<label>field</label>		
+		<%= f.collection_select(:custom_field_id, @available_custom_fields, :id, :name) %>
+	</div>
+     <div>
+     		<label>status</label>     		
+     		<%= f.collection_select(:issue_status_id, @available_issue_status, :id, :name) %>
+     </div>
+     <div>
+     		<label>e-mail template</label>
+     		<%= f.text_field :email_template %>     		
+     </div>
+     <%= f.submit "Create" %>
+<% end %>

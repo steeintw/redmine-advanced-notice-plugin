@@ -1,0 +1,15 @@
+# English strings go here for Rails i18n
+en: 
+ :advanced_notice: "Advanced Notice"
+ :advanced_notice_settings: "Advanced Notice"	
+ :field: "Field"
+ :status: "Status"
+ :email_template: "E-mail Template"	
+ :add: "Add"
+ :save: "Save"	
+ :advanced_notice_setting_delete_confirmation: "Do you really want to delete this reminder?"	
+ :permission_view_advanced_notice: "View Advanced Notice"
+ :advanced_notice_setting_created: "Setting successfully created"
+ :advanced_notice_setting_not_created: "Setting not created"
+ :new_advanced_notice_setting: "New"	
+ :value: "Value"

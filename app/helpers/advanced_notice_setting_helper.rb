@@ -1,0 +1,2 @@
+module AdvancedNoticeSettingHelper
+end

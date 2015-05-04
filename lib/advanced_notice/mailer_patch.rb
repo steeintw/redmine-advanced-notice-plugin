@@ -16,6 +16,7 @@ module AdvancedNotice
           message_id issue
           references issue
           @issue = issue
+	   @issue_url = url_for(:controller => 'issues', :action => 'show', :id => issue)
           field_value = issue.custom_field_values.select { |s| s.custom_field.id == advanced_notice_setting.custom_field_id }.first.value
           to_users = []
 

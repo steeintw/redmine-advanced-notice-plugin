@@ -10,6 +10,6 @@ class CreateAdvancedNoticeSettings < ActiveRecord::Migration
   end
 
   def self.down
-  	drop_table :avanced_notice_settings
+  	drop_table :advanced_notice_settings
   end
 end

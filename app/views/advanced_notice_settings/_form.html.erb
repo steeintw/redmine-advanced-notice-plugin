@@ -1,4 +1,4 @@
-<%= form_for( :setting, url: { :action => (setting.new_record? ? :create : :update ), :id => setting }, :remote => true, :method => (setting.new_record? ? :post : :put ) ) do |f| %>
+<%= form_for( setting, :as => :setting , url: { :action => (setting.new_record? ? :create : :update ), :id => setting }, :remote => true, :method => (setting.new_record? ? :post : :put ) ) do |f| %>
 	<%= f.hidden_field( :project_id, { :value => project.id } ) %>
 	<div>
 		<label>field</label>		
@@ -13,4 +13,8 @@
      		<%= f.text_field :email_template %>     		
      </div>
      <%= f.submit setting.new_record? ? l(:add) : l(:save) %>
+
+    <% unless setting.new_record? %>
+    <%= link_to_function l(:button_cancel), "$('setting-#{setting.id}-edit').hide(); return false;" %></p>
+    <% end %>
 <% end %>

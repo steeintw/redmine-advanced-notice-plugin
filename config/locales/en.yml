@@ -13,3 +13,5 @@ en:
  :advanced_notice_setting_not_created: "Setting not created"
  :new_advanced_notice_setting: "New"	
  :value: "Value"
+ :setting_created: "notice setting successfully created"
+ :setting_not_created: "Failed to create notice setting"

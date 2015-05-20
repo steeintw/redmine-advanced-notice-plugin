@@ -16,7 +16,7 @@ module AdvancedNotice
           message_id issue
           references issue
           @issue = issue
-	   @issue_url = url_for(:controller => 'issues', :action => 'show', :id => issue)
+	        @issue_url = url_for(:controller => 'issues', :action => 'show', :id => issue)
           field_value = issue.custom_field_values.select { |s| s.custom_field.id == advanced_notice_setting.custom_field_id }.first.value
           to_users = []
 
@@ -37,6 +37,23 @@ module AdvancedNotice
           mail(to: to_users, subject: s) do |format|             
              format.html {if advanced_notice_setting.email_template.blank? then render __method__ else render advanced_notice_setting.email_template end}
           end
+        end
+
+        def preceding_issues_closed(issue)
+          redmine_headers 'Project' => issue.project.identifier, 
+          'Issue-Id' => issue.id          
+          message_id issue
+          references issue
+          @issue = issue
+          @issue_url = url_for(:controller => 'issues', :action => 'show', :id => issue)
+          
+          s = "Notice: All preceding tasks are finished."
+          s << "[#{issue.project.name} - ##{issue.id}] #{issue.subject} is ready to go!"          
+          to_users = issue.notified_users
+          cc_users = issue.notified_watchers - to_users
+          mail to: to_users, 
+            cc: cc_users,
+            subject: s
         end
 
       end  

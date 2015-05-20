@@ -1,5 +1,16 @@
 <h2>Advanced notice settings</h2>
+<div>
+  <%= form_for(@issue_notice_setting, as: :issue_notice_setting,  url: { :action => :update_issue_notice_setting, :id => @issue_notice_setting }, remote: true, method: :post) do |f| %> 
+	<%= f.hidden_field( :project_id, { :value => @project.id } ) %>
+	<div>		
+		<%= f.check_box(:enable_preceding_issues_close_notification) %>
+		<%= f.label(:enable_preceding_issues_close_notification, "Enable preceding issues close notification") %>		
+	</div>
+	<%= f.submit l(:save) %>
+  <% end %>
+</div>
 
+<h2 style="padding-top:20px">Status transit notice settings</h2>
 <div class="splitcontentleft">
 <table class="list members">
 <thead>
@@ -41,4 +52,3 @@
 <%= render :partial => 'form', :locals => { :setting => @setting, :project => @project } %>
 </fieldset>
 </div>
-

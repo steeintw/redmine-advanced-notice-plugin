@@ -1,4 +1,0 @@
-= advanced_notice
-
-Well, it's a very draft version, tend to be used in my local projects only.
-Use it at your own risk.

@@ -45,8 +45,7 @@ module AdvancedNotice
                         issue_notice_setting = IssueNoticeSettings.where(project: self.project).first #each project has 0..1 IssueNoticeSetting
                         if issue_notice_setting != nil and issue_notice_setting.enable_preceding_issues_close_notification == true
                             issues_to_notify = []
-                            self.relations.each do |relation|
-                                Rails.logger.info("relations: #{self.relations.count}")
+                            self.relations.each do |relation|                                
                                 if (relation.relation_type == "precedes" or relation.relation_type == "blocks") and relation.issue_from == self
                                     preceding_issues_all_closed = true
                                     target_issue = relation.issue_to
@@ -59,15 +58,12 @@ module AdvancedNotice
                                         end
                                     end
                                     if preceding_issues_all_closed
-                                        issues_to_notify << target_issue    
-                                        Rails.logger.info("target issue: #{target_issue.id}")
-                                        Rails.logger.info("children: #{target_issue.children.count}")                             
+                                        issues_to_notify << target_issue
                                         #Also send notices to subtasks' assignee
                                         target_issue.children.each { |c| issues_to_notify << c } if target_issue.children.any?
                                     end
                                 end
-                            end
-                            Rails.logger.info("issues_to_notify: #{issues_to_notify.count}")
+                            end                            
                             #send notice
                             issues_to_notify.each { |issue| Mailer.preceding_issues_closed(issue).deliver }                            
                         end

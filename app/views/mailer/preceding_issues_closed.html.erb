@@ -1,0 +1,12 @@
+<h1>Task Start Reminder</h1>
+<div>
+    <p>
+    You receive this notice because all preceding tasks of <%= link_to(h("#{@issue.project.name} ##{@issue.id}: #{@issue.subject}"), @issue_url) %> are closed. You may want to take some actions about this task:
+    </p>
+    <ul>
+        <li>Task Owner(Assignee): Update status from <%= @issue.tracker.default_status.name %> to other status(In Process) and start to process this task.</li>
+        <li>Task Author / Project Owner / Watchers : Start to follow the process of this task.</li>
+    </ul>
+</div>
+
+

@@ -4,11 +4,16 @@ class AdvancedNoticeSettingsController < ApplicationController
   before_action :get_available_issue_status, :only => :index
   before_action :get_advanced_notice_setting, :only => :update
   before_action :find_project
-  before_action :authorize, :only => :index
+  before_action :authorize, :only => :index 
 
 
   def index  	
   	needs_refresh = false
+	@issue_notice_setting = IssueNoticeSettings.where(project_id: @project).first
+	if @issue_notice_setting == nil 
+		@issue_notice_setting = IssueNoticeSettings.create(project: @project, enable_preceding_issues_close_notification: true)		
+	end
+	
   	@settings = AdvancedNoticeSettings.where(project_id: @project)
   	@settings.each do |setting|
   		if setting.custom_field.nil?
@@ -22,15 +27,26 @@ class AdvancedNoticeSettingsController < ApplicationController
   end
 
   def create
-  	AdvancedNoticeSettings.create(advanced_notice_setting_params)
-  	redirect_to action: 'index', proejct_id: @project
+  	if AdvancedNoticeSettings.create(advanced_notice_setting_params)
+	 flash[:notice] = t :setting_created
+	else
+	 flash[:error] = t :setting_not_created
+	end
+	respond_to do |format|
+	 format.js { render action: "page_reload" }
+	end
+	# render(:update) { |page| page.call 'location.reload(true)' }
   end
 
   def update
     setting = AdvancedNoticeSettings.find(params[:id])
-    setting.update(advanced_notice_setting_params)    
+    if request.put? 
+	 setting.update(advanced_notice_setting_params)    
+    end    
     
-    render(:update) { |page| page.call 'location.reload' }
+    respond_to do |format|
+	 format.js { render action: "page_reload" }
+    end
   end
 
   def destroy
@@ -38,7 +54,17 @@ class AdvancedNoticeSettingsController < ApplicationController
     if setting
         setting.destroy
     end
-    render(:update) {|page| page.call 'location.reload'}
+    respond_to do |format|
+	 format.js { render action: "page_reload" }
+    end
+  end
+
+  def update_issue_notice_setting
+	issue_notice_setting = IssueNoticeSettings.find(params[:id])
+	issue_notice_setting.update(issue_notice_setting_params)
+	respond_to do |format|
+	 format.js { render action: "page_reload" }
+        end
   end
 
   private
@@ -53,6 +79,10 @@ class AdvancedNoticeSettingsController < ApplicationController
 
   def advanced_notice_setting_params
   	params.require(:setting).permit(:project_id, :custom_field_id, :issue_status_id, :email_template)  	
+  end
+
+  def issue_notice_setting_params
+  	params.require(:issue_notice_setting).permit(:project_id, :enable_preceding_issues_close_notification)  	
   end 
 
   def get_advanced_notice_setting

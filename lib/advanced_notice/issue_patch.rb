@@ -5,7 +5,7 @@ module AdvancedNotice
             base.send(:include, InstanceMethods)
 
             # same as typing in the class
-            base.class_eval do 
+            base.class_eval do
                 unloadable # Send unloadable so it will not be unloaded in development
                 after_save :check_advanced_notice_settings_and_deliver, :notify_following_tasks
 
@@ -23,15 +23,15 @@ module AdvancedNotice
         module InstanceMethods
             # This will check issue status and compare with advanced_notice_settings to determine if sending mails to custom_field needed
             def check_advanced_notice_settings_and_deliver
-                
-                if self.project.module_enabled?('advanced_notice')                    
-                    if self.status_was != self.status                        
+
+                if self.project.module_enabled?('advanced_notice')
+                    if self.status_was != self.status
                         # Get matched advanced notice settings
                         matched_settings = AdvancedNoticeSettings.matched_settings(self.project, self.status)
-                        matched_settings.each do |setting| 
+                        matched_settings.each do |setting|
                             Mailer.issue_status_hits_advanced_notice_settings(self, setting).deliver
                         end
-                    end    
+                    end
                 end
             end
 
@@ -40,12 +40,12 @@ module AdvancedNotice
                 # 1. check if current project's notification setting enabled
                 # 2. for each issue follows current one, check if all preceding issues are closed
                 # 3. send email notification if 2. is true
-                if self.status.is_closed
+                if self.status.is_closed and self.status_was != self.status
                     if(self.project.module_enabled?('advanced_notice'))
                         issue_notice_setting = IssueNoticeSettings.where(project: self.project).first #each project has 0..1 IssueNoticeSetting
                         if issue_notice_setting != nil and issue_notice_setting.enable_preceding_issues_close_notification == true
                             issues_to_notify = []
-                            self.relations.each do |relation|                                
+                            self.relations.each do |relation|
                                 if (relation.relation_type == "precedes" or relation.relation_type == "blocks") and relation.issue_from == self
                                     preceding_issues_all_closed = true
                                     target_issue = relation.issue_to
@@ -63,13 +63,13 @@ module AdvancedNotice
                                         target_issue.children.each { |c| issues_to_notify << c } if target_issue.children.any?
                                     end
                                 end
-                            end                            
+                            end
                             #send notice
-                            issues_to_notify.each { |issue| Mailer.preceding_issues_closed(issue).deliver }                            
+                            issues_to_notify.each { |issue| Mailer.preceding_issues_closed(issue).deliver }
                         end
                     end
                 end
             end
-        end 
+        end
     end
 end

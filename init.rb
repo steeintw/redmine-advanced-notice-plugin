@@ -11,17 +11,26 @@ if Rails::VERSION::MAJOR >= 3
             Issue.send(:include, AdvancedNotice::IssuePatch)
         end
 
+        unless EnabledModule.included_modules.include? AdvancedNotice::EnabledModulePatch
+            Rails.logger.info('Include EnabledModulePatch')
+            EnabledModule.send(:include, AdvancedNotice::EnabledModulePatch)
+        end
+
         unless Mailer.included_modules.include?(AdvancedNotice::MailerPatch)
             Mailer.send(:include, AdvancedNotice::MailerPatch)
         end
     end
 else
-    Dispatcher.to_prepare :redmine_kanban do
+    Dispatcher.to_prepare :redmine_advanced_notice do
         require_dependency 'issue'
         # Guards against including the module multiple time (like in tests)
         # and registering multiple callbacks
         unless Issue.included_modules.include? AdvancedNotice::IssuePatch
             Issue.send(:include, AdvancedNotice::IssuePatch)
+        end
+
+        unless EnabledModule.included_modules.include? AdvancedNotice::EnabledModulePatch
+            EnabledModule.send(:include, AdvancedNotice::EnabledModulePatch)
         end
 
         unless Mailer.included_modules.include?(AdvancedNotice::MailerPatch)
@@ -36,7 +45,7 @@ Redmine::Plugin.register :redmine_advanced_notice do
   name 'Redmine Advanced Notice plugin'
   author 'Stee Shen'
   description 'This plugin will add a setting page per project, one can use this setting to deliver addition notices to users assigned to a custom field, when issue status is changed to delicated status.'
-  version '0.0.3.1'
+  version '0.0.4'
   url 'https://github.com/steeintw/redmine-advanced-notice-plugin'
   author_url 'https://github.com/steeintw'
 
